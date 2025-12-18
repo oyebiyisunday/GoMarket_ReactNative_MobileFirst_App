@@ -1,0 +1,14 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+nixPkgs = ["nodejs_18", "npm-9_x"]
+
+[phases.install]
+cmd = "cd backend && npm install"
+
+[phases.build]  
+cmd = "cd backend && npm run build"
+
+[start]
+cmd = "cd backend && npm run start:migrate"

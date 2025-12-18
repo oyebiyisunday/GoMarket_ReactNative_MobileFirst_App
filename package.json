@@ -1,0 +1,18 @@
+{
+  "name": "gomarket-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "bootstrap": "npm run frontend:install",
+    "frontend:install": "npm install --prefix Frontend",
+    "frontend:start": "npm start --prefix Frontend",
+    "frontend:web": "npm run web --prefix Frontend",
+    "frontend:build": "npm run build --prefix Frontend",
+    "start": "npm run frontend:web",
+    "dev": "npm run frontend:start",
+    "build": "npm run frontend:build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

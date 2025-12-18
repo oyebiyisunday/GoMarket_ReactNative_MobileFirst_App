@@ -1,0 +1,31 @@
+FROM ghcr.io/cirruslabs/android-sdk:34
+
+# Install Node.js (for Expo/Metro), git, and clean up apt cache
+RUN apt-get update && \
+    apt-get install -y curl ca-certificates git && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV ANDROID_SDK_ROOT=/opt/android-sdk \
+    PATH=/opt/android-sdk/emulator:/opt/android-sdk/platform-tools:/opt/android-sdk/cmdline-tools/latest/bin:$PATH
+
+# Ensure SDK components and accept licenses
+RUN yes | sdkmanager --licenses && \
+    sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" "emulator" "system-images;android-34;google_apis;x86_64"
+
+# Create an AVD for headless emulator runs
+RUN echo "no" | avdmanager create avd -n GoMarket34 -k "system-images;android-34;google_apis;x86_64" --force
+
+WORKDIR /app
+
+# Install JS deps (cache-friendly)
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+# Expose Metro/Expo and emulator ports
+EXPOSE 8081 19000 19001 5554 5555
+
+CMD ["/bin/bash"]
