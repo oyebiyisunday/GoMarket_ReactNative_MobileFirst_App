@@ -7,6 +7,7 @@ import Constants from 'expo-constants';
 
 export const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
 export const SUPABASE_ANON = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
 // ---- API base URL ----------------------------------------------------------
 
@@ -41,10 +42,8 @@ function resolveExpoLanHost(): string | null {
 }
 
 function inferDefaultApi(): string {
-  const nodeEnv = process.env.NODE_ENV ?? 'development';
-
   // On web in production, point at Railway by default
-  if (nodeEnv === 'production' && Platform.OS === 'web') {
+  if (NODE_ENV === 'production' && Platform.OS === 'web') {
     return DEFAULT_PROD_API_WEB;
   }
 
@@ -79,13 +78,32 @@ function adaptLocalhostForAndroid(url: string): string {
   return url;
 }
 
+function isLocalhostish(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ['localhost', '127.0.0.1', '0.0.0.0', '10.0.2.2'].includes(
+      parsed.hostname
+    );
+  } catch (err) {
+    return false;
+  }
+}
+
+function enforceProdWebApi(url: string): string {
+  if (!url) return url;
+  if (NODE_ENV === 'production' && Platform.OS === 'web' && isLocalhostish(url)) {
+    return DEFAULT_PROD_API_WEB;
+  }
+  return url;
+}
+
 const resolvedApiUrl = adaptLocalhostForAndroid(
   process.env.EXPO_PUBLIC_API_URL ||
     process.env.EXPO_PUBLIC_API_BASE ||
     inferDefaultApi()
 );
 
-export const API_URL = normalizeBaseUrl(resolvedApiUrl);
+export const API_URL = normalizeBaseUrl(enforceProdWebApi(resolvedApiUrl));
 
 function ensureApiBase(url: string): string {
   if (!url) return '';
