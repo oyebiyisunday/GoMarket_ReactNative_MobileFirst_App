@@ -1,73 +1,263 @@
-GoMarket — Executive Overview
+# GoMarket
 
-GoMarket is a multi‑sided marketplace and business management platform. It enables businesses to manage products, inventory, sales, staff, and analytics, while customers discover partner stores, shop across catalogs, checkout, and track orders — all from a single codebase that runs on Web, iOS, and Android.
+> A multi-sided marketplace and business management platform built with React Native and Expo
 
-Value in One Look
-- Single codebase delivers Web, iOS, and Android experiences.
-- Clear separation of concerns: Frontend app (Expo) + Backend API (Express) + Managed Postgres (Supabase).
-- Designed for real operations: inventory tracking, product lifecycle, sales, staff roles, analytics, orders and payments.
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![React Native](https://img.shields.io/badge/React%20Native-Expo-000. svg)](https://expo.dev/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-Audiences & Use Cases
-- Business (Entity)
-  - Manage products, pricing, inventory thresholds, staff access, and end‑of‑day reports.
-  - Track sales performance and supply levels across stores.
-- Customer (Individual)
-  - Browse verified partner stores, search products, add to cart, checkout, and track orders.
+## Overview
 
-Platforms (Single Codebase)
-- Web, iOS, and Android are delivered from the same React Native + Expo codebase.
-- File‑based routing (Expo Router) with segmented layouts for authentication and main app flows.
-- Consistent UI components and styling shared across platforms.
+GoMarket is a comprehensive marketplace platform that enables businesses to manage products, inventory, sales, staff, and analytics, while providing customers with a seamless shopping experience across partner stores.  Built with a single codebase that runs on Web, iOS, and Android. 
 
-Monorepo Layout
-- Frontend/ — Expo app (React Native + Expo Router + TypeScript) targeting Web, iOS, Android.
-- backend/ - Node.js (Express + TypeScript) REST API using direct PostgreSQL access via the `pg` driver.
-- docs/ - Technical documentation and deployment guides.
-- scripts/ - Development and deployment automation scripts.
+## ✨ Key Features
 
-Note: This repo snapshot currently only contains the Expo app under `Frontend/`; the `backend/` directory referenced below is not included. The root npm scripts now target the frontend (`npm start` runs `npm run frontend:web`).
+### For Businesses
+- 📦 Product management and lifecycle tracking
+- 📊 Inventory and supply chain monitoring
+- 👥 Staff management and role-based access control
+- 💰 Sales tracking and end-of-day reports
+- 📈 Real-time analytics and performance dashboards
 
-Frontend-only quick start (this repo)
-- From the repo root: `npm install` (installs the Frontend dependencies via the updated root scripts).
-- Start the web dev server: `npm start` (or `npm run frontend:web`).
-- Configure API access in `Frontend/.env` (or copy from `.env.example`) to point at your backend endpoint.
+### For Customers
+- 🏪 Partner store discovery
+- 🔍 Unified product search across catalogs
+- 🛒 Shopping cart and seamless checkout
+- 📱 Order tracking and status updates
 
-Local Development (split frontend/backend)
-- If you add the backend back into the repo, install separately with `npm install --prefix backend` and `npm install --prefix Frontend`. `npm run bootstrap` now only installs the frontend. No implicit postinstall runs anymore.
-- Backend (http://localhost:4000 by default):
-  - `cd backend && cp .env.example .env` (set `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`).
-  - `npm run dev` (or `npm run dev --prefix backend` from the repo root).
-- Frontend:
-  - `cd Frontend && cp .env.example .env.local` and set `EXPO_PUBLIC_API_BASE=http://localhost:4000/api`.
-  - `npm run web` (or `npm run frontend:web` from the repo root).
-- Run both: start backend first, then frontend, or use `scripts/start-all.ps1 -BackendPort 4000` on Windows to launch both terminals with the correct `EXPO_PUBLIC_API_BASE`.
+## 🏗️ Architecture
 
-Key Features
-- Business: product management, inventory and supply tracking, staff roles, sales, analytics, end-of-day reports.
-- Customer: store discovery, unified product search, cart and checkout, orders and status.
-- System: secure authentication, role-aware UI routing, resilient API, managed database.
+```
+├── Frontend/          # Expo app (React Native + TypeScript)
+│   ├── app/          # Expo Router file-based routing
+│   ├── components/   # Shared UI components
+│   ├── store/        # Redux state management
+│   └── services/     # API integration
+├── backend/          # Express API (TypeScript)
+│   ├── src/
+│   │   ├── routes/   # REST API endpoints
+│   │   ├── middleware/
+│   │   └── db/       # Database queries
+│   └── migrations/   # SQL schema migrations
+├── docs/             # Technical documentation
+└── scripts/          # Development automation
+```
 
-Technology Choices (What & Why)
-- Frontend: Expo + React Native + TypeScript for a single, type‑safe codebase across platforms.
-- Navigation: Expo Router for predictable, file‑based routing with segmented layouts.
-- State: Redux Toolkit for predictable client state and easy slice composition.
-- Backend: Express + TypeScript for a concise, reliable REST API surface.
-- DB access: direct SQL via the `pg` client (no ORM). Use SQL migrations or your chosen migration tool to manage schema changes.
-- Database: Supabase PostgreSQL for managed Postgres with backups and operational tooling.
-- Hosting: Railway for API deployment, Vercel for web distribution via CDN.
+## 🚀 Tech Stack
 
-End‑to‑End Flow (Conceptual)
-- The app (Web/iOS/Android) authenticates the user and routes by user type (business vs customer).
-- The frontend calls the REST API with a bearer token; the API authorizes and executes domain logic.
-- The backend uses direct SQL queries with `pg` to interact with PostgreSQL. Migrations should be managed with SQL migration tooling or CI scripts.
-- Web is served from Vercel; the API runs on Railway; both use the same Postgres database.
+| Layer | Technology | Rationale |
+|-------|-----------|-----------|
+| **Frontend** | Expo + React Native + TypeScript | Single codebase for Web, iOS, Android with type safety |
+| **Navigation** | Expo Router | File-based routing with segmented layouts |
+| **State Management** | Redux Toolkit | Predictable state with easy slice composition |
+| **Backend** | Express + TypeScript | Reliable, type-safe REST API |
+| **Database** | PostgreSQL (Supabase) | Managed Postgres with backups and operational tooling |
+| **DB Client** | `pg` (direct SQL) | Full control over queries, managed migrations |
+| **Hosting** | Railway (API) + Vercel (Web) | Scalable deployment with CDN distribution |
 
-What’s Implemented
-- Cross‑platform UI with shared components and consistent styling.
-- Auth with token persistence; role‑based guards and segmented navigation.
-- Business modules: product CRUD, inventory, instant sales/tasks, staff views.
-- Customer modules: partner store discovery, shopping, checkout, orders.
-- Backend modules: authentication, catalog, orders, products, tasks.
-- Database schema and migrations tracked in version control.
+## 📋 Prerequisites
 
-For deeper detail, see docs/technical-architecture.md and docs/deployment-ops.md.
+- Node.js 18+ and npm
+- Expo CLI (`npm install -g expo-cli`)
+- PostgreSQL database (Supabase recommended)
+- iOS Simulator (Mac only) or Android Studio (optional)
+
+## 🛠️ Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/oyebiyisunday/GoMarket_ReactNative_MobileFirst_App. git
+cd GoMarket_ReactNative_MobileFirst_App
+```
+
+### Frontend Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Copy environment template
+cp Frontend/.env.example Frontend/.env. local
+
+# Configure your environment variables
+# Edit Frontend/.env.local with your API endpoint
+EXPO_PUBLIC_API_BASE=http://localhost:4000/api
+```
+
+### Backend Setup
+
+```bash
+# Install backend dependencies (if backend/ is included)
+npm install --prefix backend
+
+# Copy environment template
+cp backend/.env.example backend/.env
+
+# Configure your environment variables
+# Edit backend/.env
+DATABASE_URL=postgresql://user:password@host:port/database
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+JWT_SECRET=your-jwt-secret
+```
+
+### Database Setup
+
+```bash
+# Run migrations (if backend is included)
+cd backend
+npm run migrate
+
+# Or apply SQL migrations manually to your Postgres instance
+psql $DATABASE_URL < migrations/001_initial_schema.sql
+```
+
+## 🎯 Quick Start
+
+### Development Mode
+
+**Option 1: Frontend Only (Current Repo)**
+
+```bash
+# Start web development server
+npm start
+# or
+npm run frontend:web
+
+# Start iOS simulator
+npm run frontend:ios
+
+# Start Android emulator
+npm run frontend:android
+```
+
+**Option 2: Full Stack (with Backend)**
+
+```bash
+# Terminal 1: Start backend
+cd backend
+npm run dev
+
+# Terminal 2: Start frontend
+cd Frontend
+npm run web
+```
+
+**Option 3: Automated (Windows)**
+
+```bash
+# Start both backend and frontend
+.\scripts\start-all.ps1 -BackendPort 4000
+```
+
+### Production Build
+
+```bash
+# Build web app
+npm run frontend:build
+
+# Build native apps
+cd Frontend
+eas build --platform ios
+eas build --platform android
+```
+
+## 📱 Platform Support
+
+| Platform | Status | Command |
+|----------|--------|---------|
+| Web | ✅ Production | `npm run frontend:web` |
+| iOS | ✅ Production | `npm run frontend:ios` |
+| Android | ✅ Production | `npm run frontend:android` |
+
+## 🔐 Authentication
+
+GoMarket uses JWT-based authentication with role-based access control:
+
+- **Business accounts**: Access to inventory, staff, and analytics dashboards
+- **Customer accounts**: Access to shopping, orders, and store discovery
+- Token persistence with secure storage
+- Automatic route guarding based on user roles
+
+## 📚 Documentation
+
+- [Technical Architecture](docs/technical-architecture.md)
+- [Deployment & Operations](docs/deployment-ops. md)
+- [API Documentation](docs/api-reference.md) *(if available)*
+- [Contributing Guidelines](CONTRIBUTING.md) *(if available)*
+
+## 🧪 Testing
+
+```bash
+# Run frontend tests
+npm run frontend:test
+
+# Run backend tests (if included)
+npm run backend:test
+
+# Run E2E tests
+npm run test:e2e
+```
+
+## 📦 Deployment
+
+### Frontend (Vercel)
+
+```bash
+# Deploy to Vercel
+cd Frontend
+vercel --prod
+```
+
+### Backend (Railway)
+
+```bash
+# Deploy to Railway
+cd backend
+railway up
+```
+
+For detailed deployment instructions, see [docs/deployment-ops.md](docs/deployment-ops.md).
+
+## 🗺️ Roadmap
+
+- [ ] Push notifications for order updates
+- [ ] Multi-language support
+- [ ] Advanced analytics dashboards
+- [ ] Payment gateway integrations
+- [ ] Vendor onboarding automation
+- [ ] Real-time inventory sync
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting PRs.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- **Sunday Oyebiyi** - [@oyebiyisunday](https://github.com/oyebiyisunday)
+
+## 🙏 Acknowledgments
+
+- Built with [Expo](https://expo.dev/)
+- Database powered by [Supabase](https://supabase.com/)
+- Hosted on [Railway](https://railway.app/) and [Vercel](https://vercel.com/)
+
+## 📞 Support
+
+For support, email oyebiyisunday@gmail.com or reach out via my LinkedIn (Sunday Oyebiyi) 
+
+---
+
+**Note**: This repository currently contains only the frontend application under `Frontend/`. The `backend/` directory is referenced in documentation but not included in this snapshot. Root npm scripts now target the frontend exclusively (`npm start` runs `npm run frontend:web`).
