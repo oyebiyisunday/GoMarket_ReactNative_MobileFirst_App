@@ -181,12 +181,6 @@ GoMarket uses JWT-based authentication with role-based access control:
 - Token persistence with secure storage
 - Automatic route guarding based on user roles
 
-## 📚 Documentation
-
-- [Technical Architecture](docs/technical-architecture.md)
-- [Deployment & Operations](docs/deployment-ops. md)
-- [API Documentation](docs/api-reference.md) *(if available)*
-- [Contributing Guidelines](CONTRIBUTING.md) *(if available)*
 
 ## 🧪 Testing
 
